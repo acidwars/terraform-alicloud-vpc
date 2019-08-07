@@ -38,7 +38,7 @@ resource "alicloud_route_entry" "route_entry" {
 }
 
 resource "alicloud_nat_gateway" "default" {
-  count  = "${var.vpc_id == "" ? 1 : 0}"
-  vpc_id = alicloud_vpc.vpc.id
+  count  = var.vpc_id == "" ? 1 : 0
+  vpc_id = alicloud_vpc.vpc[0].id
   name   = var.vpc_name
 }
