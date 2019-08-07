@@ -23,9 +23,9 @@ resource "alicloud_vswitch" "vswitches" {
   count             = "${length(var.vswitch_cidrs)}"
   vpc_id            = "${var.vpc_id != "" ? var.vpc_id : alicloud_vpc.vpc[0].id}"
   cidr_block        = "${element(var.vswitch_cidrs, count.index)}"
-  availability_zone = "${element(var.availability_zones, count.index) != "" ? element(var.availability_zones, count.index) : lookup(data.alicloud_zones.default.zones[format("%d", length(data.alicloud_zones.default.zones) < 2 ? 0 : count.index%length(data.alicloud_zones.default.zones))], "id")}"
-  name              = "${length(var.vswitch_cidrs) < 2 ? var.vswitch_name : format("%s_%s", var.vswitch_name, format(var.number_format, count.index+1))}"
-  description       = "${length(var.vswitch_cidrs) < 2 ? var.vswitch_description : format("%s This is NO.%s", var.vswitch_description, format(var.number_format, count.index+1))}"
+  availability_zone = "${element(var.availability_zones, count.index) != "" ? element(var.availability_zones, count.index) : lookup(data.alicloud_zones.default.zones[format("%d", length(data.alicloud_zones.default.zones) < 2 ? 0 : count.index % length(data.alicloud_zones.default.zones))], "id")}"
+  name              = "${length(var.vswitch_cidrs) < 2 ? var.vswitch_name : format("%s_%s", var.vswitch_name, format(var.number_format, count.index + 1))}"
+  description       = "${length(var.vswitch_cidrs) < 2 ? var.vswitch_description : format("%s This is NO.%s", var.vswitch_description, format(var.number_format, count.index + 1))}"
 }
 
 // According to the destination cidr block to launch a new route entry
@@ -35,4 +35,10 @@ resource "alicloud_route_entry" "route_entry" {
   destination_cidrblock = "${var.destination_cidrs[count.index]}"
   nexthop_type          = "Instance"
   nexthop_id            = "${var.nexthop_ids[count.index]}"
+}
+
+resource "alicloud_nat_gateway" "default" {
+  count  = "${var.vpc_id == "" ? 1 : 0}"
+  vpc_id = alicloud_vpc.vpc.id
+  name   = var.vpc_name
 }
