@@ -1,6 +1,6 @@
 // Instance_types data source for instance_type
 data "alicloud_instance_types" "default" {
-  instance_type_family = "ecs.t5"
+  instance_type_family = "ecs.g5"
 }
 
 // Zones data source for availability_zone
