@@ -4,7 +4,7 @@ output "vpc_id" {
 }
 
 output "vswitch_ids" {
-  value = alicloud_vswitch.vswitches.*.id
+  value = alicloud_vswitch.vswitches
 }
 
 output "availability_zones" {
