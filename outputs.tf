@@ -3,8 +3,12 @@ output "vpc_id" {
   value = "${var.vpc_id == "" ? join(",", alicloud_vpc.vpc.*.id) : var.vpc_id}"
 }
 
-output "vswitch_ids" {
+output "vswitch" {
   value = alicloud_vswitch.vswitches
+}
+
+output "vswitch_ids" {
+  value = alicloud_vswitch.vswitches.*.id
 }
 
 output "availability_zones" {
