@@ -12,7 +12,7 @@ variable "number_format" {
 # Instance typs variables
 variable "cpu_core_count" {
   description = "CPU core count used to fetch instance types."
-  default     = 1
+  default     = 2
 }
 
 variable "memory_size" {

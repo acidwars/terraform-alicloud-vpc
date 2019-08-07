@@ -1,7 +1,6 @@
 // Instance_types data source for instance_type
 data "alicloud_instance_types" "default" {
-  cpu_core_count = "${var.cpu_core_count}"
-  memory_size    = "${var.memory_size}"
+  instance_type_family = "ecs.t5"
 }
 
 // Zones data source for availability_zone
