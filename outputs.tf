@@ -4,7 +4,7 @@ output "vpc_id" {
 }
 
 output "vswitch_ids" {
-  value = "${join(",", alicloud_vswitch.vswitches.*.id)}"
+  value = alicloud_vswitch.vswitches.*.id
 }
 
 output "availability_zones" {
