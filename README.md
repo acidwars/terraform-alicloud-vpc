@@ -1,57 +1,40 @@
-Alicloud VPC, VSwitch and Route Entry Terraform Module
-terraform-alicloud-vpc
-=========================================
 
-A terraform module to provide an Alicloud VPC, VSwitch and configure route entry for it.
+# Module `.`
 
-- The module contains one VPC, several VSwitches and several custom route entries.
-- If VPC is not specified, the module will launch a new one using its own parameters.
-- The number of VSwitch depends on the length of the parameter `vswitch_cidrs`.
-- The number of custom route entry depends on the length of the parameter `destination_cidrs`
-- If you have no idea availability zones, the module will provide default values according to `cpu_core_count` and `memory_size`.
+Provider Requirements:
+* **alicloud:** (any version)
 
-Usage
------
-You can use this in your terraform template with the following steps.
+## Input Variables
+* `availability_zones` (default `[""]`): List available zones to launch several VSwitches.
+* `cpu_core_count` (default `2`): CPU core count used to fetch instance types.
+* `destination_cidrs` (required): List of destination CIDR block of virtual router in the specified VPC.
+* `memory_size` (default `2`): Memory size used to fetch instance types.
+* `nexthop_ids` (required): List of next hop instance IDs of virtual router in the specified VPC.
+* `number_format` (default `"%02d"`): The number format used to output.
+* `route_table_id` (required): The route table ID of virtual router in the specified VPC.
+* `vpc_cidr` (default `"172.16.0.0/12"`): The cidr block used to launch a new vpc when 'vpc_id' is not specified.
+* `vpc_description` (default `"A new VPC created by Terrafrom module tf-alicloud-vpc-cluster"`): The vpc description used to launch a new vpc when 'vpc_id' is not specified.
+* `vpc_id` (required): The vpc id used to launch several vswitches.
+* `vpc_name` (default `"TF-VPC"`): The vpc name used to launch a new vpc when 'vpc_id' is not specified.
+* `vswitch_cidrs` (required): List of cidr blocks used to launch several new vswitches.
+* `vswitch_description` (default `"New VSwitch created by Terrafrom module tf-alicloud-vpc-cluster."`): The vswitch description used to launch several new vswitch.
+* `vswitch_name` (default `"TF_VSwitch"`): The vswitch name prefix used to launch several new vswitch.
 
-1. Adding a module resource to your template, e.g. main.tf
+## Output Values
+* `availability_zones`
+* `route_table_id`
+* `router_id`
+* `vpc_id`
+* `vswitch`
+* `vswitch_ids`
 
+## Managed Resources
+* `alicloud_nat_gateway.default` from `alicloud`
+* `alicloud_route_entry.route_entry` from `alicloud`
+* `alicloud_vpc.vpc` from `alicloud`
+* `alicloud_vswitch.vswitches` from `alicloud`
 
-        module "tf-vpc-cluster" {
-           source = "alibaba/vpc/alicloud"
-
-           vpc_name = "my_module_vpc"
-
-           vswitch_name = "my_module_vswitch"
-           vswitch_cidrs = [
-              "172.16.1.0/24",
-              "172.16.2.0/24"
-           ]
-
-           destination_cidrs = "${var.destination_cidrs}"
-           nexthop_ids = "${var.server_ids}"
-
-        }
-
-2. Setting values for the following variables:
-
-    through environment variables
-
-    - ALICLOUD_ACCESS_KEY
-    - ALICLOUD_SECRET_KEY
-
-    and, either through terraform.tfvars or -var arguments on the CLI
-
-    - destination_cidrs
-    - server_ids
-
-Authors
--------
-Created and maintained by He Guimin(@xiaozhu36 heguimin36@163.com)
-
-Reference
----------
-* [Terraform-Provider-Alicloud Github](https://github.com/terraform-providers/terraform-provider-alicloud)
-* [Terraform-Provider-Alicloud Release](https://releases.hashicorp.com/terraform-provider-alicloud/)
-* [Terraform-Provider-Alicloud Docs](https://www.terraform.io/docs/providers/alicloud/index.html)
+## Data Resources
+* `data.alicloud_instance_types.default` from `alicloud`
+* `data.alicloud_zones.default` from `alicloud`
 
